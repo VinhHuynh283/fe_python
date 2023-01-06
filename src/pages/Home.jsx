@@ -1,5 +1,5 @@
 import {
-    Button,
+  Button,
   Table,
   TableContainer,
   Tbody,
@@ -14,67 +14,47 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 import BaseAlert from "../component/BaseAlert";
 import { deleteDevice, getAllDevices } from "../apis/devices";
+import _ from "lodash";
+import { getAllCategory } from "../apis/categories";
 const Home = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Name",
-      dateIn: "10/11/2015",
-      date: "10/11/2015",
-      dateExpired: "10/11/2015",
-      type: "Type",
-      price: 100,
-      quantity: 100,
-      sold: 50,
-    },
-    {
-      id: 2,
-      name: "Name",
-      dateIn: "10/11/2015",
-      date: "10/11/2015",
-      dateExpired: "10/11/2015",
-      type: "Type",
-      price: 100,
-      quantity: 100,
-      sold: 50,
-    },
-    {
-      id: 3,
-      name: "Name",
-      dateIn: "10/11/2015",
-      date: "10/11/2015",
-      dateExpired: "10/11/2015",
-      type: "Type",
-      price: 100,
-      quantity: 100,
-      sold: 50,
-    },
-  ]);
 
+  ]);
+  const [listCategory, setListCategory] = useState([])
+  const fetchListCategory = () => {
+    getAllCategory().then((result) => {
+      const keys = ["id", "ten", "mota", "trangthai", "createdAt", "updatedAt"];
+      const newData = _.map(result.data, (item) =>
+        _.zipObject(keys, item)
+      );
+
+      setListCategory(newData);
+    });
+  };
   const renderTable = () => {
     return data.map(
       ({
         id,
-        name,
-        dateIn,
-        date,
-        dateExpired,
-        type,
-        quantity,
-        sold,
-        price,
-      }) => (
+        tenthietbi,
+        ngaynhap,
+        ngaysx,
+        hsx,
+        loai,
+        giaban,
+        soluong,
+        daban,
+      },index) => (
         <Tr key={id}>
-          <Td>{id}</Td>
-          <Td>{name}</Td>
-          <Td>{dateIn}</Td>
-          <Td>{date}</Td>
-          <Td>{dateExpired}</Td>
-          <Td>{type}</Td>
-          <Td>{price}</Td>
-          <Td>{quantity}</Td>
-          <Td>{sold}</Td>
+          <Td>{++index}</Td>
+          <Td>{tenthietbi}</Td>
+          <Td>{ngaynhap}</Td>
+          <Td>{ngaysx}</Td>
+          <Td>{hsx}</Td>
+          <Td>{renderType(loai)}</Td>
+          <Td>{giaban}</Td>
+          <Td>{soluong}</Td>
+          <Td>{daban}</Td>
           <Td className="flex gap-3">
             <Button>
               <EditIcon
@@ -98,7 +78,12 @@ const Home = () => {
   };
   const fetchListDevice = () => {
     getAllDevices().then((result) => {
-      setData(result.data);
+
+      const keys = ["id", "tenthietbi", "ngaynhap", "ngaysx", "hsx", "loai", "giaban", "soluong", "daban", "createdAt", "updatedAt"];
+      const newData = _.map(result.data, (item) =>
+        _.zipObject(keys, item)
+      );
+      setData(newData);
     });
   };
 
@@ -106,14 +91,21 @@ const Home = () => {
     deleteDevice(id)
       .then((result) => {
         console.log(result);
+        fetchListDevice()
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  const renderType=(loai)=>{
+    return listCategory.find(item => item.id == loai)?.ten
+  }
+
   useEffect(() => {
+    console.log("running")
     fetchListDevice();
+    fetchListCategory()
   }, []);
   return (
     <div>
@@ -134,13 +126,7 @@ const Home = () => {
             </Tr>
           </Thead>
           <Tbody>{renderTable()}</Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
-            </Tr>
-          </Tfoot>
+         
         </Table>
       </TableContainer>
     </div>

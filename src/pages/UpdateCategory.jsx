@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { getCategoryDetails, updateCategory } from "../apis/categories";
@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 const UpdateCategory = () => {
   const [input, setInput] = useState({});
+  const [alert, setAlert] = useState(null)
   const { id } = useParams();
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -15,29 +16,51 @@ const UpdateCategory = () => {
   const fetchUpdateCategory = () => {
     let data = new FormData();
     _(input).forEach((val, key) => {
-      data[key] = val;
+      data.append(key, val)
     });
-    updateCategory(data)
+    updateCategory(id, data)
       .then((result) => {
         console.log(result);
+        setAlert(0)
       })
       .catch((err) => {
         console.log(err);
+        setAlert(1)
       });
   };
 
   const fetchCategoryDetails = () => {
-    getCategoryDetails()
+    getCategoryDetails(id)
       .then((result) => {
-        setInput(result.data);
+        const keys = ["id", "ten", "mota", "trangthai", "createdAt", "updatedAt"];
+        const newCategory = _.zipObject(keys, result.data[0])
+        setInput(newCategory);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+  const renderAlert = () => {
+ 
+    if (alert == null) {
+      return ""
+    }
+    else if (alert == 0) {
+      return <Alert status='success' variant='solid'>
+        <AlertIcon />
+        Cập nhật thành công
+      </Alert>
+    }
+    else if (alert == 1) {
+      return <Alert status='error' variant='solid'>
+        <AlertIcon />
+        Cập nhật thất bại
+      </Alert>
+    }
 
+  }
   useEffect(() => {
-    fetchCategoryDetails(id);
+    fetchCategoryDetails();
   }, []);
 
   return (
@@ -45,30 +68,30 @@ const UpdateCategory = () => {
       <FormControl>
         <FormLabel>Tên danh mục</FormLabel>
         <Input
-          name="name"
+          name="ten"
           type="text"
-          value={input.name}
+          value={input.ten}
           onChange={handleInput}
         />
         <div className="my-3" />
         <FormLabel>Mô tả</FormLabel>
 
         <Input
-          name="dateIn"
+          name="mota"
           type="text"
-          value={input.dateIn}
+          value={input.mota}
           onChange={handleInput}
         />
         <div className="my-3" />
         <FormLabel>Trạng thái</FormLabel>
 
-        <Input
-          name="date"
-          type="text"
-          value={input.date}
-          onChange={handleInput}
-        />
+        <Select value={input.trangthai} name={"trangthai"} onChange={handleInput}>
+          <option value='0'>Bình thường</option>
+          <option value='1'>Bản nháp</option>
 
+        </Select>
+        <div className="my-5" />
+        {renderAlert()}
         <div className="my-5" />
         <Button
           onClick={fetchUpdateCategory}

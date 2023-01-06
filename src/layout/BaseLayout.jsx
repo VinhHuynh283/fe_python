@@ -5,7 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 const BaseLayout = (props) => {
   return (
     <div className="grid grid-cols-8">
-      <div className="col-span-1 border h-screen flex flex-col p-4 items-center justify-center">
+      <div className="col-span-1 border h-screen flex flex-col p-4  ">
         <span role={"button"} className="my-1 font-semibold text-blue-900">
           <Link to={"/danh-muc"}>Danh mục thiết bị</Link>
         </span>

@@ -14,39 +14,18 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { deleteCategory, getAllCategory } from "../apis/categories";
 import { useNavigate } from "react-router-dom";
 import BaseAlert from "../component/BaseAlert";
+import _ from "lodash";
 const Category = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Name",
-      description: "description",
-      status: 1,
-      createdAt: "10/11/2015",
-    },
-    {
-      id: 2,
-      name: "Name",
-      description: "description",
-      status: 1,
-      createdAt: "10/11/2015",
-    },
-    {
-      id: 3,
-      name: "Name",
-      description: "description",
-      status: 0,
-      createdAt: "10/11/2015",
-    },
-  ]);
+  const [data, setData] = useState([ ]);
 
   const renderTable = () => {
-    return data.map(({ id, name, description, status, createdAt }) => (
+    return data.map(({ id, ten, mota, trangthai, createdAt }) => (
       <Tr key={id}>
         <Td>{id}</Td>
-        <Td>{name}</Td>
-        <Td>{description}</Td>
-        <Td>{status}</Td>
+        <Td>{ten}</Td>
+        <Td>{mota}</Td>
+        <Td>{trangthai==0?"Bình thường":"Bản nháp"}</Td>
         <Td>{createdAt}</Td>
         <Td className="flex gap-3">
           <Button>
@@ -66,7 +45,11 @@ const Category = () => {
 
   const fetchListCategory = () => {
     getAllCategory().then((result) => {
-      setData(result.data);
+      const keys = ["id", "ten", "mota", "trangthai", "createdAt", "updatedAt"];
+      const newData = _.map(result.data, (item) =>
+        _.zipObject(keys, item)
+      );
+      setData(newData);
     });
   };
 
@@ -74,6 +57,7 @@ const Category = () => {
     deleteCategory(id)
       .then((result) => {
         console.log(result);
+        fetchListCategory()
       })
       .catch((err) => {
         console.log(err);
@@ -97,13 +81,7 @@ const Category = () => {
             </Tr>
           </Thead>
           <Tbody>{renderTable()}</Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
-            </Tr>
-          </Tfoot>
+         
         </Table>
       </TableContainer>
     </div>
