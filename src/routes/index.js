@@ -6,6 +6,7 @@ import CreateDevice from "../pages/CreateDevice";
 import CreateCategory from "../pages/CreateCategory";
 import UpdateDevice from "../pages/UpdateDevice";
 import UpdateCategory from "../pages/UpdateCategory";
+import Login from "../pages/Login";
 
 export const router = createBrowserRouter([
   {
@@ -36,5 +37,11 @@ export const router = createBrowserRouter([
         element: <UpdateCategory />,
       },
     ],
+  },
+  {
+
+    path: "/login",
+    element: <Login />,
+
   },
 ]);

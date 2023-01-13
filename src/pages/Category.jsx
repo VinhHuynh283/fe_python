@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { deleteCategory, getAllCategory } from "../apis/categories";
 import { useNavigate } from "react-router-dom";
-import BaseAlert from "../component/BaseAlert";
+
 import _ from "lodash";
 const Category = () => {
   const navigate = useNavigate();
@@ -21,23 +21,25 @@ const Category = () => {
 
   const renderTable = () => {
     return data.map(({ id, ten, mota, trangthai, createdAt }) => (
-      <Tr key={id}>
+      <Tr key={id} className="bg-white">
         <Td>{id}</Td>
         <Td>{ten}</Td>
         <Td>{mota}</Td>
         <Td>{trangthai==0?"Bình thường":"Bản nháp"}</Td>
-        <Td>{createdAt}</Td>
-        <Td className="flex gap-3">
-          <Button>
-            <EditIcon
-              onClick={() => {
-                navigate("/cap-nhat-danh-muc/" + id);
-              }}
-            />
-          </Button>
-          <BaseAlert id={id} func={()=>{fetchRemoveCategory(id)}}>
-            <DeleteIcon />
-          </BaseAlert>
+        <Td>{new Date(createdAt).toLocaleDateString()}</Td>
+        <Td className="">
+          <div className="flex gap-4 m-4">
+            <a>
+              <EditIcon
+                onClick={() => {
+                  navigate("/cap-nhat-danh-muc/" + id);
+                }}
+              />
+            </a>
+            <a id={id} onClick={() => { fetchRemoveCategory(id) }}>
+              <DeleteIcon />
+            </a>
+         </div>
         </Td>
       </Tr>
     ));
@@ -71,8 +73,10 @@ const Category = () => {
       <TableContainer>
         <Table size="sm">
           <Thead>
-            <Tr>
-              <Th>STT</Th>
+            <Tr className="bg-blue-50">
+              <Th>
+                <div className="m-5 ">STT</div>
+              </Th>
               <Th>TÊN DANH MỤC </Th>
               <Th>MÔ TẢ</Th>
               <Th>TRẠNG THÁI</Th>

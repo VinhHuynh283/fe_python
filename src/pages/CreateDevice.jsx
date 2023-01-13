@@ -62,7 +62,8 @@ const CreateDevice = () => {
     fetchListCategory()
   },[])
   return (
-    <div className="w-1/3 p-5">
+    <div className="w-1/3 p-5 ">
+      <h1 className="text-2xl font-semibold text-slate-600 mb-6">TẠO THIẾT BỊ</h1>
       <FormControl>
         <FormLabel>Tên thiết bị</FormLabel>
         <Input
@@ -128,7 +129,8 @@ const CreateDevice = () => {
         <Button
           onClick={fetchCreateDevice}
           colorScheme="teal"
-          variant="outline"
+          variant="solid"
+          className="w-full mt-5 "
         >
           Lưu
         </Button>

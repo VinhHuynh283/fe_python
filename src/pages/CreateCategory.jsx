@@ -50,6 +50,7 @@ const CreateCategory = () => {
 
   return (
     <div className="w-1/3 p-5">
+      <h1 className="text-2xl font-semibold text-slate-600 mb-6">TẠO DANH MỤC</h1>
       <FormControl>
         <FormLabel>Tên danh mục</FormLabel>
         <Input
@@ -79,11 +80,12 @@ const CreateCategory = () => {
         {renderAlert()}
         <div className="my-5" />
         <Button
+        className="w-full mt-4 "
           colorScheme="teal"
-          variant="outline"
+          variant="solid"
           onClick={fetchCreateCategory}
         >
-          Lưu
+          Tạo mới danh mục
         </Button>
       </FormControl>
 
